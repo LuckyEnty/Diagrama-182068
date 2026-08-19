@@ -1,0 +1,145 @@
+flowchart TD
+    %% ==========================================
+    %% ESTILOS (Colores según Leyenda)
+    %% ==========================================
+    classDef crm fill:#52b72c,stroke:#2b6e14,stroke-width:2px,color:#fff;
+    classDef sales fill:#f68b1f,stroke:#b25805,stroke-width:2px,color:#fff;
+    classDef purchasing fill:#0088cc,stroke:#005580,stroke-width:2px,color:#fff;
+    classDef production fill:#52195f,stroke:#2d0835,stroke-width:2px,color:#fff;
+    classDef service fill:#fadb14,stroke:#ad8b00,stroke-width:2px,color:#000;
+    classDef inventory fill:#7f7f7f,stroke:#4a4a4a,stroke-width:2px,color:#fff;
+    classDef finance fill:#e60000,stroke:#8f0000,stroke-width:2px,color:#fff;
+    classDef reporting fill:#d970e6,stroke:#8b2499,stroke-width:2px,color:#fff;
+
+    %% ==========================================
+    %% NODOS
+    %% ==========================================
+
+    %% CRM / SRM
+    Activities(["Activities"]):::crm
+    Customer(["Customer"]):::crm
+    Lead(["Lead"]):::crm
+    Supplier(["Supplier"]):::crm
+    BPMaster(["Business Partner Master"]):::crm
+
+    %% Service
+    CustEquip(["Customer Equipment Card"]):::service
+    ServCall(["Service Call"]):::service
+    ServContract(["Service Contract"]):::service
+    ServBilling(["Service Billing"]):::service
+
+    %% Sales
+    Opportunity(["Opportunity"]):::sales
+    Pricing(["Pricing"]):::sales
+    SalesQuotation(["Sales Quotation"]):::sales
+    SalesOrder(["Sales Order"]):::sales
+    DeliveryNote(["Delivery Note"]):::sales
+    ARInvoice(["AR Invoice"]):::sales
+    IncPayments(["Incoming Payments"]):::sales
+
+    %% Purchasing
+    PurchRequest(["Purchase Request"]):::purchasing
+    PurchQuotation(["Purchase Quotation"]):::purchasing
+    PurchOrder(["Purchase Order"]):::purchasing
+    GoodsReceiptPO(["Goods Receipt PO"]):::purchasing
+    APInvoice(["AP Invoice"]):::purchasing
+    OutPayments(["Outgoing Payments"]):::purchasing
+
+    %% Production
+    BOM(["Bill of Materials"]):::production
+    MRP(["Material Requirements Planning"]):::production
+    Sourcing(["Sourcing"]):::production
+    ProdOrder(["Production Order"]):::production
+    IssueProd(["Issue to Production"]):::production
+    ReceiptProd(["Receipt from Production"]):::production
+    ProdReporting(["Product Reporting"]):::production
+
+    %% Inventory / Master Data
+    ItemMaster(["Item Master"]):::inventory
+    WarehouseMgmt(["Warehouse Management"]):::inventory
+    DemandPlanning(["Demand Planning"]):::inventory
+
+    %% Finance
+    COA(["Chart of Accounts"]):::finance
+    GLAccounts(["General Ledger Accounts"]):::finance
+    GLAccountDet(["G/L Account Determination"]):::finance
+    CostAccounting(["Cost Accounting"]):::finance
+    JournalEntries(["Journal Entries"]):::finance
+    AP_AR(["AP / AR"]):::finance
+    CashMgmt(["Cash Management"]):::finance
+    Reconciliation(["Reconciliation"]):::finance
+
+    %% Reporting
+    BackorderReport(["Backorder Reporting"]):::reporting
+    InvAuditReport(["Inventory Audit Report"]):::reporting
+    AccBalancesReport(["Account Balances Report"]):::reporting
+    FinReporting(["Financial Reporting"]):::reporting
+
+    %% ==========================================
+    %% FLUJO VERTICAL (TOP TO BOTTOM)
+    %% ==========================================
+
+    %% CRM / SRM Flow
+    Activities --> Customer
+    Customer --> Lead
+    Lead --> Supplier
+    Supplier --> BPMaster
+
+    %% Master Data & Service Links
+    Customer -.-> CustEquip
+    Lead -.-> Opportunity
+    Supplier -.-> Sourcing
+    CustEquip --> ServCall --> ServContract --> ServBilling
+    ServBilling -.-> ARInvoice
+
+    %% Master Data to Inventory
+    CustEquip --- ItemMaster
+    ItemMaster --- WarehouseMgmt
+    WarehouseMgmt --- SalesOrder
+    ItemMaster --- Pricing
+
+    %% Production Prep
+    BOM --> MRP --> Sourcing
+
+    %% Main Order Processing (Vertical Sequence)
+    Customer ==> Opportunity ==> Pricing ==> SalesQuotation ==> SalesOrder
+    PurchRequest ==> PurchQuotation ==> PurchOrder
+    Sourcing ==> ProdOrder
+
+    %% Hub Orders
+    SalesOrder --- PurchOrder --- ProdOrder
+    ProdOrder --- DemandPlanning
+    DemandPlanning -.- BOM
+
+    %% Execution & Logistics
+    SalesOrder ==> DeliveryNote
+    PurchOrder ==> GoodsReceiptPO
+    ProdOrder ==> IssueProd
+
+    DeliveryNote --- GoodsReceiptPO --- IssueProd
+
+    %% Invoicing & Completion
+    DeliveryNote ==> ARInvoice ==> IncPayments
+    GoodsReceiptPO ==> APInvoice ==> OutPayments
+    IssueProd ==> ReceiptProd ==> ProdReporting
+
+    ARInvoice --- APInvoice --- ReceiptProd
+
+    %% Finance & General Ledger Flow
+    COA ==> GLAccounts ==> GLAccountDet ==> CostAccounting ==> JournalEntries
+    IssueProd ==> JournalEntries
+    JournalEntries ==> ARInvoice
+    JournalEntries ==> AP_AR ==> CashMgmt ==> Reconciliation ==> FinReporting
+
+    AP_AR -.-> IncPayments
+    CashMgmt -.-> IncPayments
+    AP_AR -.-> OutPayments
+
+    %% Reporting Connections
+    ProdOrder -.-> BackorderReport
+    DemandPlanning --- BackorderReport
+    CostAccounting --- InvAuditReport
+    JournalEntries -.-> InvAuditReport
+    APInvoice -.-> AccBalancesReport
+    BackorderReport === InvAuditReport === AccBalancesReport === ProdReporting
+    FinReporting === ProdReporting
