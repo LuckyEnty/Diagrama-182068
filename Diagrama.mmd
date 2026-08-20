@@ -1,110 +1,175 @@
-block-beta
-  columns 8
+flowchart TD
+    %% Styling Classes according to the legend
+    classDef crm fill:#44b029,stroke:#2e7d32,stroke-width:2px,color:#fff;
+    classDef sales fill:#f58220,stroke:#d84315,stroke-width:2px,color:#fff;
+    classDef purchasing fill:#008fd5,stroke:#0277bd,stroke-width:2px,color:#fff;
+    classDef production fill:#5c1d73,stroke:#311b92,stroke-width:2px,color:#fff;
+    classDef service fill:#fff200,stroke:#fbc02d,stroke-width:2px,color:#000;
+    classDef inventory fill:#706f6f,stroke:#424242,stroke-width:2px,color:#fff;
+    classDef finance fill:#e52320,stroke:#b71c1c,stroke-width:2px,color:#fff;
+    classDef reporting fill:#d97ee8,stroke:#8e24aa,stroke-width:2px,color:#fff;
 
-  %% Encabezados de Módulos (Estilo Columnas de Metro)
-  crm["<b>CRM / SRM</b>"]:::crm
-  inv["<b>Inventory</b>"]:::inv
-  srv["<b>Service</b>"]:::srv
-  sal["<b>Sales</b>"]:::sal
-  pur["<b>Purchasing</b>"]:::pur
-  prod["<b>Production</b>"]:::prod
-  fin["<b>Finance</b>"]:::fin
-  rep["<b>Reporting</b>"]:::rep
+    %% -------------------------------------------------------------
+    %% SUBGRAPHS / MODULES
+    %% -------------------------------------------------------------
 
-  %% Nivel 1: Master Data & Setup
-  c_act["Activities"]:::crm
-  i_item["Item Master"]:::inv
-  s_card["Customer Equip. Card"]:::srv
-  f_coa["Chart of Accounts"]:::fin
-  space:4
+    subgraph SUB_CRM ["CRM / SRM"]
+        Activities["Activities"]:::crm
+        Customer["Customer"]:::crm
+        Lead["Lead"]:::crm
+        Supplier["Supplier"]:::crm
+        BPMaster["Business Partner Master"]:::crm
+    end
 
-  c_cust["Customer"]:::crm
-  i_wm["Warehouse Mgmt"]:::inv
-  s_call["Service Call"]:::srv
-  f_gla["Gen. Ledger Accounts"]:::fin
-  space:4
+    subgraph SUB_SERVICE ["Service"]
+        CEC["Customer Equipment Card"]:::service
+        ServiceCall["Service Call"]:::service
+        ServiceContract["Service Contract"]:::service
+        ServiceBilling["Service Billing"]:::service
+    end
 
-  c_lead["Lead"]:::crm
-  p_bom["Bill of Materials"]:::prod
-  s_cnt["Service Contract"]:::srv
-  f_gld["G/L Acct Determination"]:::fin
-  space:4
+    subgraph SUB_INVENTORY ["Inventory"]
+        ItemMaster["Item Master"]:::inventory
+        WarehouseMgmt["Warehouse Management"]:::inventory
+        DemandPlanning["Demand Planning"]:::inventory
+    end
 
-  c_sup["Supplier"]:::crm
-  p_mrp["MRP"]:::prod
-  s_bill["Service Billing"]:::srv
-  f_cost["Cost Accounting"]:::fin
-  space:4
+    subgraph SUB_SALES ["Sales"]
+        Opportunity["Opportunity"]:::sales
+        Pricing["Pricing"]:::sales
+        SalesQuotation["Sales Quotation"]:::sales
+        SalesOrder["Sales Order"]:::sales
+        DeliveryNote["Delivery Note"]:::sales
+        ARInvoice["AR Invoice"]:::sales
+        IncomingPayments["Incoming Payments"]:::sales
+    end
 
-  c_bpm["Business Partner Master"]:::crm
-  space:7
+    subgraph SUB_PURCHASING ["Purchasing"]
+        PurchaseRequest["Purchase Request"]:::purchasing
+        PurchaseQuotation["Purchase Quotation"]:::purchasing
+        PurchaseOrder["Purchase Order"]:::purchasing
+        GoodsReceiptPO["Goods Receipt PO"]:::purchasing
+        APInvoice["AP Invoice"]:::purchasing
+        OutgoingPayments["Outgoing Payments"]:::purchasing
+    end
 
-  %% Nivel 2: Demanda, Cotizaciones y Sourcing
-  sal_opp["Opportunity"]:::sal
-  sal_prc["Pricing"]:::sal
-  sal_qt["Sales Quotation"]:::sal
-  pur_req["Purchase Request"]:::pur
-  pur_qt["Purchase Quotation"]:::pur
-  prod_src["Sourcing"]:::prod
-  inv_dem["Demand Planning"]:::inv
-  space:1
+    subgraph SUB_PRODUCTION ["Production"]
+        MRP["Material Requirements Planning"]:::production
+        BOM["Bill of Materials"]:::production
+        Sourcing["Sourcing"]:::production
+        ProductionOrder["Production Order"]:::production
+        IssueToProduction["Issue to Production"]:::production
+        ReceiptFromProduction["Receipt from Production"]:::production
+    end
 
-  %% Nivel 3: Ejecución de Órdenes
-  sal_ord["Sales Order"]:::sal
-  pur_ord["Purchase Order"]:::pur
-  prod_ord["Production Order"]:::prod
-  space:5
+    subgraph SUB_FINANCE ["Finance"]
+        COA["Chart of Accounts"]:::finance
+        GLAccounts["General Ledger Accounts"]:::finance
+        GLAccountDet["G/L Account Determination"]:::finance
+        CostAccounting["Cost Accounting"]:::finance
+        InventoryAuditReport["Inventory Audit Report"]:::finance
+        JournalEntries["Journal Entries"]:::finance
+        AP_AR["AP / AR"]:::finance
+        CashManagement["Cash Management"]:::finance
+        Reconciliation["Reconciliation"]:::finance
+        FinancialReporting["Financial Reporting"]:::finance
+    end
 
-  %% Nivel 4: Logística, Almacén y Movimientos
-  sal_del["Delivery Note"]:::sal
-  pur_gr["Goods Receipt PO"]:::pur
-  prod_iss["Issue to Production"]:::prod
-  f_je["Journal Entries"]:::fin
-  inv_aud["Inventory Audit Report"]:::inv
-  space:3
+    subgraph SUB_REPORTING ["Reporting"]
+        BackorderReporting["Backorder Reporting"]:::reporting
+        AccountBalances["Account Balances Report"]:::reporting
+        ProductReporting["Product Reporting"]:::reporting
+    end
 
-  %% Nivel 5: Facturación, Recepción y Asientos
-  sal_ar["AR Invoice"]:::sal
-  pur_ap["AP Invoice"]:::pur
-  prod_rec["Receipt from Prod."]:::prod
-  f_post["Financial Postings"]:::fin
-  f_apar["AP / AR"]:::fin
-  space:3
+    %% -------------------------------------------------------------
+    %% CRM Flow
+    %% -------------------------------------------------------------
+    Activities --> Customer
+    Customer --> Lead
+    Lead --> Supplier
+    Supplier --> BPMaster
 
-  %% Nivel 6: Pagos, Tesorería y Conciliación
-  sal_pay["Incoming Payments"]:::sal
-  pur_pay["Outgoing Payments"]:::pur
-  f_cash["Cash Management"]:::fin
-  f_rec["Reconciliation"]:::fin
-  space:4
+    %% -------------------------------------------------------------
+    %% Service Flow
+    %% -------------------------------------------------------------
+    CEC --> ServiceCall
+    ServiceCall --> ServiceContract
+    ServiceContract --> ServiceBilling
 
-  %% Nivel 7: Reportería Final y Balance
-  rep_back["Backorder Reporting"]:::rep
-  rep_bal["Account Balances"]:::rep
-  rep_prod["Product Reporting"]:::rep
-  rep_fin["Financial Reporting"]:::rep
-  space:4
+    %% -------------------------------------------------------------
+    %% Sales Flow
+    %% -------------------------------------------------------------
+    Customer --> Opportunity
+    Opportunity --> Pricing
+    Pricing --> SalesQuotation
+    SalesQuotation --> SalesOrder
+    SalesOrder --> DeliveryNote
+    DeliveryNote --> ARInvoice
+    ARInvoice --> IncomingPayments
 
-  %% Relaciones y Flujos Principales
-  c_cust --> sal_opp
-  c_cust --> s_card
-  c_sup --> pur_req
-  sal_opp --> sal_prc --> sal_qt --> sal_ord --> sal_del --> sal_ar --> sal_pay
-  pur_req --> pur_qt --> pur_ord --> pur_gr --> pur_ap --> pur_pay
-  p_bom --> p_mrp --> prod_src --> prod_ord --> prod_iss --> prod_rec
-  s_card --> s_call --> s_cnt --> s_bill --> sal_ar
-  sal_del --> f_je
-  pur_gr --> f_je
-  sal_ar --> f_post
-  pur_ap --> f_post
-  f_post --> f_apar --> f_cash --> f_rec --> rep_fin
+    %% -------------------------------------------------------------
+    %% Purchasing Flow
+    %% -------------------------------------------------------------
+    PurchaseRequest --> PurchaseQuotation
+    PurchaseQuotation --> PurchaseOrder
+    PurchaseOrder --> GoodsReceiptPO
+    GoodsReceiptPO --> APInvoice
+    APInvoice --> OutgoingPayments
 
-  %% Clases de Estilo basadas en los colores del diagrama
-  classDef crm fill:#44b329,stroke:#2b7a18,color:#fff;
-  classDef sal fill:#f58220,stroke:#ba5d0b,color:#fff;
-  classDef pur fill:#008fd3,stroke:#005f8d,color:#fff;
-  classDef prod fill:#5b1366,stroke:#3b0a42,color:#fff;
-  classDef srv fill:#fed100,stroke:#b89700,color:#000;
-  classDef inv fill:#7f7f7f,stroke:#4f4f4f,color:#fff;
-  classDef fin fill:#e5231b,stroke:#9b150f,color:#fff;
-  classDef rep fill:#eb8ce8,stroke:#a642a3,color:#000;
+    %% -------------------------------------------------------------
+    %% Production Flow
+    %% -------------------------------------------------------------
+    BOM --> MRP
+    MRP --> Sourcing
+    Sourcing --> ProductionOrder
+    ProductionOrder --> IssueToProduction
+    IssueToProduction --> ReceiptFromProduction
+
+    %% -------------------------------------------------------------
+    %% Inventory Flow
+    %% -------------------------------------------------------------
+    CEC --- ItemMaster
+    Pricing --- ItemMaster
+    ItemMaster --> WarehouseMgmt
+    WarehouseMgmt --> SalesOrder
+    SalesOrder --- PurchaseOrder
+    PurchaseOrder --- ProductionOrder
+    ProductionOrder --> DemandPlanning
+
+    %% -------------------------------------------------------------
+    %% Finance Flow
+    %% -------------------------------------------------------------
+    COA --> GLAccounts
+    GLAccounts --> GLAccountDet
+    GLAccountDet --> CostAccounting
+    CostAccounting --> InventoryAuditReport
+    InventoryAuditReport --> JournalEntries
+    DeliveryNote -- "Financial Postings" --> JournalEntries
+    IssueToProduction -- "Financial Postings" --> JournalEntries
+    JournalEntries --> AP_AR
+    AP_AR --> CashManagement
+    CashManagement --> Reconciliation
+    Reconciliation --> FinancialReporting
+
+    %% -------------------------------------------------------------
+    %% Reporting Flow & Secondary Cross Connections
+    %% -------------------------------------------------------------
+    ProductionOrder -.-> BackorderReporting
+    DemandPlanning --> BackorderReporting
+    BackorderReporting --> AccountBalances
+    ReceiptFromProduction --> ProductReporting
+    AccountBalances --> ProductReporting
+    FinancialReporting --> ProductReporting
+
+    %% Additional Cross-module links (dotted & solid)
+    Customer -.-> CEC
+    Lead -.-> PurchaseQuotation
+    Supplier -.-> Sourcing
+    Sourcing -.-> PurchaseQuotation
+    ServiceBilling -.-> ARInvoice
+    JournalEntries -.-> AccountBalances
+    AP_AR -.-> ARInvoice
+    AP_AR -.-> APInvoice
+    CashManagement -.-> IncomingPayments
+    CashManagement -.-> OutgoingPayments
+    BOM -.-> GLAccounts
