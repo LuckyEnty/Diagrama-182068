@@ -1,103 +1,110 @@
 block-beta
-  columns 6
+  columns 8
 
-  %% Encabezados de Columnas / Tracks Funcionales
+  %% --- ENCABEZADOS DE DOMINIO ---
   c_crm["<b>CRM / SRM</b>"]
-  c_sales["<b>Sales</b>"]
-  c_purch["<b>Purchasing</b>"]
-  c_inv_prod["<b>Inventory & Production</b>"]
-  c_fin["<b>Finance & Accounting</b>"]
-  c_serv_rep["<b>Service & Reporting</b>"]
+  c_srv["<b>Service</b>"]
+  c_sal["<b>Sales</b>"]
+  c_pur["<b>Purchasing</b>"]
+  c_inv["<b>Inventory</b>"]
+  c_prd["<b>Production</b>"]
+  c_fin["<b>Finance</b>"]
+  c_rep["<b>Reporting</b>"]
 
-  %% Fila 1: Maestros / Orígenes
+  %% --- NIVEL 1: MASTER DATA & INICIACIÓN ---
   bp_act["Activities"]
-  lead["Lead / Customer"]
-  item_m["Item Master"]
-  bom["Bill of Materials"]
-  coa["Chart of Accounts"]
-  eq_card["Equipment Card"]
+  srv_cec["Customer Equip. Card"]
+  sal_opp["Opportunity"]
+  pur_req["Purchase Request"]
+  inv_itm["Item Master"]
+  prd_bom["Bill of Materials"]
+  fin_coa["Chart of Accounts"]
+  space
 
-  %% Fila 2: Planificación y Ofertas
-  opp["Opportunity"]
-  sq["Sales Quotation"]
-  pr["Purchase Request"]
-  mrp["MRP / Sourcing"]
-  gla["G/L Accounts"]
-  serv_call["Service Call"]
+  %% --- NIVEL 2: PLANIFICACIÓN & PRECIOS ---
+  bp_cus["Customer"]
+  srv_cal["Service Call"]
+  sal_prc["Pricing"]
+  pur_quo["Purchase Quotation"]
+  inv_whm["Warehouse Mgmt"]
+  prd_mrp["MRP"]
+  fin_gla["General Ledger"]
+  space
 
-  %% Fila 3: Órdenes y Contratos
-  so["Sales Order"]
-  pq["Purchase Quotation"]
-  po["Purchase Order"]
-  prod_ord["Production Order"]
-  cost_acc["Cost Accounting"]
-  serv_contr["Service Contract"]
+  %% --- NIVEL 3: COTIZACIONES & DEMANDA ---
+  bp_led["Lead"]
+  srv_cnt["Service Contract"]
+  sal_quo["Sales Quotation"]
+  space
+  inv_dmd["Demand Planning"]
+  prd_src["Sourcing"]
+  fin_gld["G/L Determination"]
+  rep_bor["Backorder Report"]
 
-  %% Fila 4: Ejecución / Almacén
-  dn["Delivery Note"]
-  grpo["Goods Receipt PO"]
-  wh_m["Warehouse Mgmt"]
-  issue_p["Issue to Production"]
-  rec_p["Receipt from Production"]
-  serv_bill["Service Billing"]
+  %% --- NIVEL 4: ÓRDENES ACTIVAS ---
+  bp_sup["Supplier"]
+  srv_bil["Service Billing"]
+  sal_ord["Sales Order"]
+  pur_ord["Purchase Order"]
+  space
+  prd_ord["Production Order"]
+  fin_cst["Cost Accounting"]
+  space
 
-  %% Fila 5: Facturación & Asientos
-  ar_inv["AR Invoice"]
-  ap_inv["AP Invoice"]
-  je["Journal Entries"]
-  ap_ar["AP / AR"]
-  cash_m["Cash Management"]
-  recon["Reconciliation"]
+  %% --- NIVEL 5: MOVIMIENTOS DE ALMACÉN / EJECUCIÓN ---
+  bp_bpm["BP Master"]
+  space
+  sal_del["Delivery Note"]
+  pur_grp["Goods Receipt PO"]
+  space
+  prd_iss["Issue to Production"]
+  fin_iar["Inventory Audit"]
+  space
 
-  %% Fila 6: Pagos y Reportería Final
-  inc_pay["Incoming Payments"]
-  out_pay["Outgoing Payments"]
-  rep_inv["Inventory Audit Report"]
-  rep_acc["Account Balances"]
-  rep_fin["Financial Reporting"]
-  rep_prod["Product Reporting"]
+  %% --- NIVEL 6: FACTURACIÓN & REGISTRO CONTABLE ---
+  space
+  space
+  sal_ari["AR Invoice"]
+  pur_api["AP Invoice"]
+  space
+  prd_rec["Receipt from Prod."]
+  fin_jne["Journal Entries"]
+  rep_abr["Account Balances"]
 
-  %% Relaciones de Flujo Vertical y Cruzado (Top-to-Bottom Flow)
-  bp_act --> lead
-  lead --> opp
-  opp --> sq
-  sq --> so
-  so --> dn
-  dn --> ar_inv
-  ar_inv --> inc_pay
+  %% --- NIVEL 7: PAGOS & TESORERÍA ---
+  space
+  space
+  sal_inc["Incoming Payments"]
+  pur_out["Outgoing Payments"]
+  space
+  space
+  fin_apa["AP / AR & Cash Mgmt"]
+  rep_pdr["Product Reporting"]
 
-  item_m --> bom
-  pr --> pq
-  pq --> po
-  po --> grpo
-  grpo --> ap_inv
-  ap_inv --> out_pay
+  %% --- NIVEL 8: CIERRE & REPORTES FINALES ---
+  space
+  space
+  space
+  space
+  space
+  space
+  fin_rec["Reconciliation"]
+  rep_fnr["Financial Reporting"]
 
-  bom --> mrp
-  mrp --> prod_ord
-  prod_ord --> issue_p
-  issue_p --> rec_p
-  rec_p --> rep_prod
+  %% --- CONEXIONES VERTICALES PRINCIPALES ---
+  bp_act --> bp_cus --> bp_led --> bp_sup --> bp_bpm
+  srv_cec --> srv_cal --> srv_cnt --> srv_bil
+  sal_opp --> sal_prc --> sal_quo --> sal_ord --> sal_del --> sal_ari --> sal_inc
+  pur_req --> pur_quo --> pur_ord --> pur_grp --> pur_api --> pur_out
+  inv_itm --> inv_whm --> inv_dmd
+  prd_bom --> prd_mrp --> prd_src --> prd_ord --> prd_iss --> prd_rec
+  fin_coa --> fin_gla --> fin_gld --> fin_cst --> fin_iar --> fin_jne --> fin_apa --> fin_rec
+  rep_bor --> rep_abr --> rep_pdr --> rep_fnr
 
-  coa --> gla
-  gla --> cost_acc
-  cost_acc --> je
-  dn --> je
-  grpo --> je
-  je --> ap_ar
-  ap_ar --> cash_m
-  cash_m --> recon
-  recon --> rep_fin
-
-  eq_card --> serv_call
-  serv_call --> serv_contr
-  serv_contr --> serv_bill
-  serv_bill --> ar_inv
-
-  %% Estilos por Módulos
-  style c_crm fill:#5ebd3e,stroke:#333,color:#fff
-  style c_sales fill:#f58220,stroke:#333,color:#fff
-  style c_purch fill:#008fd3,stroke:#333,color:#fff
-  style c_inv_prod fill:#5c2d91,stroke:#333,color:#fff
-  style c_fin fill:#e30613,stroke:#333,color:#fff
-  style c_serv_rep fill:#ffe600,stroke:#333,color:#000
+  %% --- INTEGRACIONES MULTI-ÁREA CLAVE ---
+  sal_del --> fin_jne
+  pur_grp --> fin_jne
+  sal_ari --> fin_apa
+  pur_api --> fin_apa
+  fin_rec --> rep_fnr
+  prd_rec --> rep_pdr
