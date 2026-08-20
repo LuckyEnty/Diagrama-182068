@@ -1,110 +1,110 @@
 block-beta
   columns 8
 
-  %% --- ENCABEZADOS DE DOMINIO ---
-  c_crm["<b>CRM / SRM</b>"]
-  c_srv["<b>Service</b>"]
-  c_sal["<b>Sales</b>"]
-  c_pur["<b>Purchasing</b>"]
-  c_inv["<b>Inventory</b>"]
-  c_prd["<b>Production</b>"]
-  c_fin["<b>Finance</b>"]
-  c_rep["<b>Reporting</b>"]
+  %% Encabezados de Módulos (Estilo Columnas de Metro)
+  crm["<b>CRM / SRM</b>"]:::crm
+  inv["<b>Inventory</b>"]:::inv
+  srv["<b>Service</b>"]:::srv
+  sal["<b>Sales</b>"]:::sal
+  pur["<b>Purchasing</b>"]:::pur
+  prod["<b>Production</b>"]:::prod
+  fin["<b>Finance</b>"]:::fin
+  rep["<b>Reporting</b>"]:::rep
 
-  %% --- NIVEL 1: MASTER DATA & INICIACIÓN ---
-  bp_act["Activities"]
-  srv_cec["Customer Equip. Card"]
-  sal_opp["Opportunity"]
-  pur_req["Purchase Request"]
-  inv_itm["Item Master"]
-  prd_bom["Bill of Materials"]
-  fin_coa["Chart of Accounts"]
-  space
+  %% Nivel 1: Master Data & Setup
+  c_act["Activities"]:::crm
+  i_item["Item Master"]:::inv
+  s_card["Customer Equip. Card"]:::srv
+  f_coa["Chart of Accounts"]:::fin
+  space:4
 
-  %% --- NIVEL 2: PLANIFICACIÓN & PRECIOS ---
-  bp_cus["Customer"]
-  srv_cal["Service Call"]
-  sal_prc["Pricing"]
-  pur_quo["Purchase Quotation"]
-  inv_whm["Warehouse Mgmt"]
-  prd_mrp["MRP"]
-  fin_gla["General Ledger"]
-  space
+  c_cust["Customer"]:::crm
+  i_wm["Warehouse Mgmt"]:::inv
+  s_call["Service Call"]:::srv
+  f_gla["Gen. Ledger Accounts"]:::fin
+  space:4
 
-  %% --- NIVEL 3: COTIZACIONES & DEMANDA ---
-  bp_led["Lead"]
-  srv_cnt["Service Contract"]
-  sal_quo["Sales Quotation"]
-  space
-  inv_dmd["Demand Planning"]
-  prd_src["Sourcing"]
-  fin_gld["G/L Determination"]
-  rep_bor["Backorder Report"]
+  c_lead["Lead"]:::crm
+  p_bom["Bill of Materials"]:::prod
+  s_cnt["Service Contract"]:::srv
+  f_gld["G/L Acct Determination"]:::fin
+  space:4
 
-  %% --- NIVEL 4: ÓRDENES ACTIVAS ---
-  bp_sup["Supplier"]
-  srv_bil["Service Billing"]
-  sal_ord["Sales Order"]
-  pur_ord["Purchase Order"]
-  space
-  prd_ord["Production Order"]
-  fin_cst["Cost Accounting"]
-  space
+  c_sup["Supplier"]:::crm
+  p_mrp["MRP"]:::prod
+  s_bill["Service Billing"]:::srv
+  f_cost["Cost Accounting"]:::fin
+  space:4
 
-  %% --- NIVEL 5: MOVIMIENTOS DE ALMACÉN / EJECUCIÓN ---
-  bp_bpm["BP Master"]
-  space
-  sal_del["Delivery Note"]
-  pur_grp["Goods Receipt PO"]
-  space
-  prd_iss["Issue to Production"]
-  fin_iar["Inventory Audit"]
-  space
+  c_bpm["Business Partner Master"]:::crm
+  space:7
 
-  %% --- NIVEL 6: FACTURACIÓN & REGISTRO CONTABLE ---
-  space
-  space
-  sal_ari["AR Invoice"]
-  pur_api["AP Invoice"]
-  space
-  prd_rec["Receipt from Prod."]
-  fin_jne["Journal Entries"]
-  rep_abr["Account Balances"]
+  %% Nivel 2: Demanda, Cotizaciones y Sourcing
+  sal_opp["Opportunity"]:::sal
+  sal_prc["Pricing"]:::sal
+  sal_qt["Sales Quotation"]:::sal
+  pur_req["Purchase Request"]:::pur
+  pur_qt["Purchase Quotation"]:::pur
+  prod_src["Sourcing"]:::prod
+  inv_dem["Demand Planning"]:::inv
+  space:1
 
-  %% --- NIVEL 7: PAGOS & TESORERÍA ---
-  space
-  space
-  sal_inc["Incoming Payments"]
-  pur_out["Outgoing Payments"]
-  space
-  space
-  fin_apa["AP / AR & Cash Mgmt"]
-  rep_pdr["Product Reporting"]
+  %% Nivel 3: Ejecución de Órdenes
+  sal_ord["Sales Order"]:::sal
+  pur_ord["Purchase Order"]:::pur
+  prod_ord["Production Order"]:::prod
+  space:5
 
-  %% --- NIVEL 8: CIERRE & REPORTES FINALES ---
-  space
-  space
-  space
-  space
-  space
-  space
-  fin_rec["Reconciliation"]
-  rep_fnr["Financial Reporting"]
+  %% Nivel 4: Logística, Almacén y Movimientos
+  sal_del["Delivery Note"]:::sal
+  pur_gr["Goods Receipt PO"]:::pur
+  prod_iss["Issue to Production"]:::prod
+  f_je["Journal Entries"]:::fin
+  inv_aud["Inventory Audit Report"]:::inv
+  space:3
 
-  %% --- CONEXIONES VERTICALES PRINCIPALES ---
-  bp_act --> bp_cus --> bp_led --> bp_sup --> bp_bpm
-  srv_cec --> srv_cal --> srv_cnt --> srv_bil
-  sal_opp --> sal_prc --> sal_quo --> sal_ord --> sal_del --> sal_ari --> sal_inc
-  pur_req --> pur_quo --> pur_ord --> pur_grp --> pur_api --> pur_out
-  inv_itm --> inv_whm --> inv_dmd
-  prd_bom --> prd_mrp --> prd_src --> prd_ord --> prd_iss --> prd_rec
-  fin_coa --> fin_gla --> fin_gld --> fin_cst --> fin_iar --> fin_jne --> fin_apa --> fin_rec
-  rep_bor --> rep_abr --> rep_pdr --> rep_fnr
+  %% Nivel 5: Facturación, Recepción y Asientos
+  sal_ar["AR Invoice"]:::sal
+  pur_ap["AP Invoice"]:::pur
+  prod_rec["Receipt from Prod."]:::prod
+  f_post["Financial Postings"]:::fin
+  f_apar["AP / AR"]:::fin
+  space:3
 
-  %% --- INTEGRACIONES MULTI-ÁREA CLAVE ---
-  sal_del --> fin_jne
-  pur_grp --> fin_jne
-  sal_ari --> fin_apa
-  pur_api --> fin_apa
-  fin_rec --> rep_fnr
-  prd_rec --> rep_pdr
+  %% Nivel 6: Pagos, Tesorería y Conciliación
+  sal_pay["Incoming Payments"]:::sal
+  pur_pay["Outgoing Payments"]:::pur
+  f_cash["Cash Management"]:::fin
+  f_rec["Reconciliation"]:::fin
+  space:4
+
+  %% Nivel 7: Reportería Final y Balance
+  rep_back["Backorder Reporting"]:::rep
+  rep_bal["Account Balances"]:::rep
+  rep_prod["Product Reporting"]:::rep
+  rep_fin["Financial Reporting"]:::rep
+  space:4
+
+  %% Relaciones y Flujos Principales
+  c_cust --> sal_opp
+  c_cust --> s_card
+  c_sup --> pur_req
+  sal_opp --> sal_prc --> sal_qt --> sal_ord --> sal_del --> sal_ar --> sal_pay
+  pur_req --> pur_qt --> pur_ord --> pur_gr --> pur_ap --> pur_pay
+  p_bom --> p_mrp --> prod_src --> prod_ord --> prod_iss --> prod_rec
+  s_card --> s_call --> s_cnt --> s_bill --> sal_ar
+  sal_del --> f_je
+  pur_gr --> f_je
+  sal_ar --> f_post
+  pur_ap --> f_post
+  f_post --> f_apar --> f_cash --> f_rec --> rep_fin
+
+  %% Clases de Estilo basadas en los colores del diagrama
+  classDef crm fill:#44b329,stroke:#2b7a18,color:#fff;
+  classDef sal fill:#f58220,stroke:#ba5d0b,color:#fff;
+  classDef pur fill:#008fd3,stroke:#005f8d,color:#fff;
+  classDef prod fill:#5b1366,stroke:#3b0a42,color:#fff;
+  classDef srv fill:#fed100,stroke:#b89700,color:#000;
+  classDef inv fill:#7f7f7f,stroke:#4f4f4f,color:#fff;
+  classDef fin fill:#e5231b,stroke:#9b150f,color:#fff;
+  classDef rep fill:#eb8ce8,stroke:#a642a3,color:#000;
